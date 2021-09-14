@@ -29,13 +29,13 @@ main:
 	syscall				# execute the system call
 	
 	la $a0, table	#Load the start address of the table
-	lb $a1, size	#Load the size of the table
+	lw $a1, size	#Load the size of the table
 	jal printArray	#printArray(arr, size); 
 	#-------------------------------------------------------------------
 	# Call the Bubble Sort Function
 	#-------------------------------------------------------------------
 	la $a0, table	#Load the start address of the table
-	lb $a1, size	#Load the size of the table
+	lw $a1, size	#Load the size of the table
 	jal bubbleSort
 	#-------------------------------------------------------------------
 	
@@ -45,7 +45,7 @@ main:
 	
 	
 	la $a0, table	#Load the start address of the table
-	lb $a1, size	#Load the size of the table
+	lw $a1, size	#Load the size of the table
 	jal printArray	#printArray(arr, size); 
 	
 	
@@ -142,9 +142,10 @@ bubbleSort:
 firstForBubble:
 	bge  $s3, $s1, endFirstForBubble	# if (i >= n) goto end of first for loop
 	addi $s2, $0, 0	# swapped = 0
+	addi $s4, $0, 0 # j = 0
 	secondForBubble:
 		sub  $t0, $s1, $s3	# $t0 = Size (n) - i
-		bge  $s4, $t0, endSecondForBubble	# if (j >= n) goto end of second for loop
+		bge  $s4, $t0, endSecondForBubble	# if (j >= n - i) goto end of second for loop
 	
 		sll  $t0, $s4, 2	# $t0 = j * 4
 		add  $t0, $t0, $s0      # $t0 = &Table + j * 4 
@@ -155,7 +156,7 @@ firstForBubble:
 		addi $t2, $t0, 4	# $t2 = $t0 + 4
 		# Now register $t2 has the POSITION of arr[j + 1]
 		# We will now pass the value of arr[j + 1] into $t3
-		lw   $t3, 0($t2)
+		lw   $t3, 0($t2)  # or 4($t0)
 	
 	
 		# BY THIS TIME:
@@ -166,7 +167,7 @@ firstForBubble:
 		# Now we are in if statement
 		# We saved the return address so we can find it later
 		# => We don't have to worry about it
-		addi $a0, $s0, 0	# $a0 = arr
+		addi $a0, $s0, 0	# $a0 = arr  		could change with move
 		addi $a1, $s4, 0	# $a1 = j
 		addi $a2, $s4, 1	# $a2 = j + 1
 		jal  swap
@@ -177,6 +178,14 @@ firstForBubble:
 		addi $s4, $s4, 1	# j++
 		j    secondForBubble
 	endSecondForBubble:
+	
+	# Print array
+	addi $a0, $s0, 0	# $a0 = arr
+	addi $a1, $s1, 0	# $a1 = size
+	
+	sw   $ra, 4($fp)
+	jal  printArray
+	lw   $ra, 4($fp)
 	
 	# Return if NO swap happened
 	beqz $s2, Return	# if (swapped == 0) return;
