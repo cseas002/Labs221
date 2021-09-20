@@ -1,6 +1,6 @@
 #######################################################################################
 #Program Name		: This Program uses Float Bubble Sort to Sort n float values
-#Programmer			: Petros Panayi	ID:000000
+#Programmer		: Christoforos Seas	ID:000000
 #Date Last Modif.	: 16 Sep. 2021
 ########################################################################################
 # Comments: This Program uses Float Bubble Sort to Sort
@@ -210,10 +210,10 @@ swap: # ERROR if use: la $a0, table
 	sll  $a2, $a2, 2 	#Compute the offset for y
 	add  $a1, $a1, $a0	#Compute the address of x
 	add  $a2, $a2, $a0	#Compute the address of y
-	lwc1 $f1, 0($a1)
-	lwc1 $f2, 0($a2)
+	lw   $t1, 0($a1)
+	lw   $t2, 0($a2)
 	# Swap numbers
-	swc1 $f2, 0($a1) 
-	swc1 $f1, 0($a2) 
+	sw   $t2, 0($a1) 
+	sw   $t1, 0($a2) 
 	jr   $ra
 #-------------------------------------------------------------------
